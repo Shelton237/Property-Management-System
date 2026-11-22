@@ -7,6 +7,9 @@ set -euo pipefail
 
 DOMAIN=pms.diginova.cm
 APP_USER=saturnin
+# Adresse de notification Let's Encrypt (expiration de certificat).
+# A surcharger : LE_EMAIL=vous@domaine.cm sudo -E bash deploy/provision.sh
+LE_EMAIL="${LE_EMAIL:-admin@diginova.cm}"
 SRC="/home/${APP_USER}/PROPERTY-MANAGEMENT-SYSTEM"
 DEST=/var/www/PROPERTY-MANAGEMENT-SYSTEM
 VHOST=/etc/apache2/sites-available/${DOMAIN}.conf
@@ -59,7 +62,7 @@ if [ -d "/etc/letsencrypt/live/${DOMAIN}" ]; then
   echo "    certificat deja present, renouvellement gere par certbot.timer"
 else
   certbot --apache -d "${DOMAIN}" -d "www.${DOMAIN}" \
-    --non-interactive --agree-tos --redirect -m admin@diginova.cm
+    --non-interactive --agree-tos --redirect -m "$LE_EMAIL"
 fi
 
 echo "==> 5/5 Optimisation Laravel"
