@@ -113,9 +113,10 @@ y est mise en cache, et dans cet etat Laravel ignore `phpunit.xml` : un
 `RefreshDatabase` viderait.
 
 `tests/bootstrap.php` refuse donc de demarrer tant que le cache est present, et
-`composer test` enchaine proprement `config:clear`, les tests, puis
-`config:cache`. Seconde barriere : toute base dont le nom ne finit pas par
-`_test` est rejetee.
+`composer test` enchaine `optimize:clear`, les tests, puis `optimize`. La purge
+porte sur tous les caches, pas seulement la configuration : un cache de routes
+perime ferait tourner les tests sur des routes qui ne sont plus celles du code.
+Seconde barriere : toute base dont le nom ne finit pas par `_test` est rejetee.
 
 ## Traductions
 

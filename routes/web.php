@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocaleController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
+/*
+ * There is no public landing page yet, so the root sends visitors straight to
+ * the part of the product they can actually use.
+ */
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return redirect()->route(Auth::check() ? 'dashboard' : 'login');
 })->name('home');
 
 Route::get('locale/{locale}', LocaleController::class)->name('locale.update');
