@@ -14,6 +14,8 @@ export function useFormatters() {
 
     const tag = computed(() => (locale.value === 'en' ? 'en-GB' : 'fr-FR'));
 
+    const unit = computed(() => (currency.value === 'XAF' ? 'FCFA' : currency.value));
+
     function number(value: number, digits = 0): string {
         return new Intl.NumberFormat(tag.value, {
             minimumFractionDigits: digits,
@@ -23,25 +25,32 @@ export function useFormatters() {
 
     /** Full amount, for totals and balances. */
     function money(value: number): string {
-        return `${number(value)} ${currency.value === 'XAF' ? 'FCFA' : currency.value}`;
+        return `${number(value)} ${unit.value}`;
     }
 
-    /** Shortened amount, for axis labels and dense cards. */
+    /** Shortened amount, for dense cards. */
     function compactMoney(value: number): string {
+        return `${compactNumber(value)} ${unit.value}`;
+    }
+
+    /**
+     * Shortened figure without the currency, for axis ticks: repeating the unit
+     * on every gridline is noise, and makes the axis column overflow.
+     */
+    function compactNumber(value: number): string {
         const abs = Math.abs(value);
-        const unit = currency.value === 'XAF' ? 'FCFA' : currency.value;
 
-        if (abs >= 1_000_000) return `${number(value / 1_000_000, 1)} M ${unit}`;
-        if (abs >= 1_000) return `${number(value / 1_000)} k ${unit}`;
+        if (abs >= 1_000_000) return `${number(value / 1_000_000, 1)} M`;
+        if (abs >= 1_000) return `${number(value / 1_000)} k`;
 
-        return `${number(value)} ${unit}`;
+        return number(value);
     }
 
     function percent(value: number, digits = 0): string {
         return `${number(value, digits)} %`;
     }
 
-    /** Short weekday and day, for chart axes. */
+    /** Short day number, for chart axes. */
     function shortDay(iso: string): string {
         return new Intl.DateTimeFormat(tag.value, { day: 'numeric' }).format(new Date(iso));
     }
@@ -65,5 +74,16 @@ export function useFormatters() {
         return formatter.format(-Math.round(minutes / 1440), 'day');
     }
 
-    return { number, money, compactMoney, percent, shortDay, weekday, longDate, fromNow, currency };
+    return {
+        number,
+        money,
+        compactMoney,
+        compactNumber,
+        percent,
+        shortDay,
+        weekday,
+        longDate,
+        fromNow,
+        currency,
+    };
 }

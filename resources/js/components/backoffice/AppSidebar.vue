@@ -32,7 +32,7 @@ function isCurrent(name?: string): boolean {
 
     <aside
         class="fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-white transition-[width,transform] duration-200 dark:border-slate-800 dark:bg-slate-900"
-        :class="[collapsed ? 'w-[72px]' : 'w-64', mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']"
+        :class="[collapsed ? 'w-16' : 'w-[232px]', mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']"
     >
         <!-- Property identity -->
         <div class="flex h-16 shrink-0 items-center gap-2.5 border-b border-slate-200 px-4 dark:border-slate-800">

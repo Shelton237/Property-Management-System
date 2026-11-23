@@ -13,7 +13,7 @@ const props = defineProps<{
 
 const { t } = useTranslations();
 const { isDark } = useDarkMode();
-const { compactMoney, money, shortDay, longDate } = useFormatters();
+const { compactMoney, compactNumber, money, shortDay, longDate } = useFormatters();
 
 const SERIES: SeriesKey[] = ['rooms', 'food_beverage', 'other'];
 const HEIGHT = 190;
@@ -64,13 +64,13 @@ const totalOf = (day: (typeof props.days)[number]) => day.rooms + day.food_bever
         <div class="relative">
             <!-- Value axis -->
             <div class="flex">
-                <div class="w-14 shrink-0">
+                <div class="w-16 shrink-0">
                     <div
                         v-for="tick in [...ticks].reverse()"
                         :key="tick.value"
                         class="flex h-[47.5px] items-start justify-end pr-2 text-[10px] text-slate-400"
                     >
-                        {{ compactMoney(tick.value) }}
+                        {{ compactNumber(tick.value) }}
                     </div>
                 </div>
 
@@ -128,11 +128,14 @@ const totalOf = (day: (typeof props.days)[number]) => day.rooms + day.food_bever
                         </div>
                     </div>
 
-                    <!-- Tooltip -->
+                    <!-- Tooltip, bounded to the plot: unclamped, it widens the page on the last bar. -->
                     <div
                         v-if="hovered !== null"
                         class="pointer-events-none absolute -top-2 z-10 w-48 -translate-y-full rounded-lg border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-700 dark:bg-slate-900"
-                        :style="{ left: `${((hovered + 0.5) / props.days.length) * 100}%`, transform: 'translate(-50%, -100%)' }"
+                        :style="{
+                            left: `clamp(96px, ${((hovered + 0.5) / props.days.length) * 100}%, calc(100% - 96px))`,
+                            transform: 'translate(-50%, -100%)',
+                        }"
                     >
                         <p class="text-xs font-semibold text-slate-900 dark:text-slate-100">
                             {{ longDate(props.days[hovered].day) }}

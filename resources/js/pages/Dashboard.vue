@@ -127,7 +127,7 @@ const ACTIVITY_COLOURS: Record<string, string> = {
 
             <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
                 <!-- Revenue -->
-                <div class="xl:col-span-2">
+                <div class="min-w-0 xl:col-span-2">
                     <Panel
                         :title="t('dashboard.revenue.title')"
                         :subtitle="t('dashboard.revenue.subtitle', { total: money(metrics.revenueSeries.total) })"
@@ -258,7 +258,7 @@ const ACTIVITY_COLOURS: Record<string, string> = {
 
             <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
                 <!-- Arrivals and departures -->
-                <div class="xl:col-span-2">
+                <div class="min-w-0 xl:col-span-2">
                     <Panel :title="t('dashboard.movements.title')" :subtitle="t('dashboard.movements.subtitle', { date: businessDate })">
                         <div class="grid gap-6 sm:grid-cols-2">
                             <div v-for="side in ['arrivals', 'departures'] as const" :key="side">

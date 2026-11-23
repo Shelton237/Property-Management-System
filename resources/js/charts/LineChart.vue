@@ -123,7 +123,10 @@ function onMove(event: MouseEvent) {
             <div
                 v-if="hovered !== null && coords[hovered]"
                 class="pointer-events-none absolute top-0 z-10 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
-                :style="{ left: `${(coords[hovered].x / WIDTH) * 100}%`, transform: 'translateX(-50%)' }"
+                :style="{
+                    left: `clamp(70px, ${(coords[hovered].x / WIDTH) * 100}%, calc(100% - 70px))`,
+                    transform: 'translateX(-50%)',
+                }"
             >
                 <p class="text-[11px] text-slate-500 dark:text-slate-400">
                     {{ longDate(coords[hovered].day) }}

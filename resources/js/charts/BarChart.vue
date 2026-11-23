@@ -15,6 +15,8 @@ const { isDark } = useDarkMode();
 const { shortDay, weekday, longDate } = useFormatters();
 
 const HEIGHT = 150;
+/** Half the tooltip width, used to keep it inside the plot. */
+const TOOLTIP_HALF = 88;
 
 const colour = computed(() => resolve(MAGNITUDE, isDark.value));
 const hovered = ref<number | null>(null);
@@ -24,15 +26,28 @@ const max = computed(() => Math.max(1, ...props.points.map((p) => p.share)));
 function height(share: number): number {
     return Math.max(share > 0 ? 4 : 2, (share / max.value) * HEIGHT);
 }
+
+/**
+ * One tooltip for the whole chart rather than one per bar: a tooltip nested in
+ * a 40px bar cannot be kept inside the plot, and widens the page on the last
+ * bars.
+ */
+const tooltipLeft = computed(() => {
+    if (hovered.value === null) return '0px';
+
+    const percent = ((hovered.value + 0.5) / props.points.length) * 100;
+
+    return `clamp(${TOOLTIP_HALF}px, ${percent}%, calc(100% - ${TOOLTIP_HALF}px))`;
+});
 </script>
 
 <template>
-    <div>
+    <div class="relative">
         <div class="flex items-end gap-1.5" :style="{ height: `${HEIGHT}px` }" role="img" :aria-label="label">
             <div
                 v-for="(point, index) in props.points"
                 :key="point.day"
-                class="relative flex-1"
+                class="flex h-full flex-1 items-end"
                 @mouseenter="hovered = index"
                 @mouseleave="hovered = null"
             >
@@ -45,24 +60,27 @@ function height(share: number): number {
                     }"
                     :class="point.share === 0 ? 'bg-slate-200 dark:bg-slate-700' : ''"
                 />
-
-                <div
-                    v-if="hovered === index"
-                    class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max -translate-x-1/2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
-                >
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400">{{ longDate(point.day) }}</p>
-                    <p class="text-xs font-semibold tabular-nums text-slate-900 dark:text-slate-100">
-                        {{ t('dashboard.on_the_books.rooms_sold', { count: point.sold }) }} · {{ point.share }} %
-                    </p>
-                </div>
             </div>
         </div>
 
         <div class="mt-2 flex gap-1.5">
-            <div v-for="(point, index) in props.points" :key="`axis-${point.day}`" class="flex-1 text-center">
-                <p class="text-[10px] text-slate-400">{{ index === 0 ? t('dashboard.today') : weekday(point.day) }}</p>
+            <div v-for="(point, index) in props.points" :key="`axis-${point.day}`" class="min-w-0 flex-1 text-center">
+                <p class="truncate text-[10px] text-slate-400">
+                    {{ index === 0 ? t('dashboard.today') : weekday(point.day) }}
+                </p>
                 <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400">{{ shortDay(point.day) }}</p>
             </div>
+        </div>
+
+        <div
+            v-if="hovered !== null"
+            class="pointer-events-none absolute bottom-full z-10 mb-2 w-44 -translate-x-1/2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
+            :style="{ left: tooltipLeft }"
+        >
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">{{ longDate(props.points[hovered].day) }}</p>
+            <p class="text-xs font-semibold tabular-nums text-slate-900 dark:text-slate-100">
+                {{ t('dashboard.on_the_books.rooms_sold', { count: props.points[hovered].sold }) }} · {{ props.points[hovered].share }} %
+            </p>
         </div>
     </div>
 </template>
