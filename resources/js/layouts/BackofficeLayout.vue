@@ -11,7 +11,7 @@ const { collapsed, mobileOpen, toggle, closeMobile } = useSidebar();
         <AppSidebar :collapsed="collapsed" :mobile-open="mobileOpen" @close="closeMobile" />
 
         <!-- overflow-x-clip is the safety net: no widget can widen the page. -->
-        <div class="overflow-x-clip transition-[padding] duration-200" :class="collapsed ? 'lg:pl-16' : 'lg:pl-[232px]'">
+        <div class="overflow-x-clip transition-[padding] duration-200" :class="collapsed ? 'lg:pl-16' : 'lg:pl-60'">
             <AppHeader :collapsed="collapsed" @toggle="toggle" />
 
             <main class="p-4 sm:p-6">
