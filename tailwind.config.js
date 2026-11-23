@@ -1,22 +1,39 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 /*
- * Brand palette: deep emerald. This object is the single place to change the
+ * Brand palette: deep navy. This object is the single place to change the
  * product colour, every component refers to it through the `brand-*` classes.
  */
 const brand = {
-    50: '#ecfdf5',
-    100: '#d1fae5',
-    200: '#a7f3d0',
-    300: '#6ee7b7',
-    400: '#34d399',
-    500: '#10b981',
-    600: '#059669',
-    700: '#047857',
-    800: '#065f46',
-    900: '#064e3b',
-    950: '#022c22',
-    DEFAULT: '#065f46',
+    50: '#f2f5fb',
+    100: '#e3e9f5',
+    200: '#c2cee7',
+    300: '#93a6d1',
+    400: '#5e78b4',
+    500: '#3a5597',
+    600: '#2a4080',
+    700: '#203468',
+    800: '#16295b',
+    900: '#101e45',
+    950: '#0a142e',
+    DEFAULT: '#16295b',
+};
+
+/*
+ * Gold palette. Used for highlights, checks and decorative curves.
+ */
+const gold = {
+    50: '#fef6e7',
+    100: '#fdeac4',
+    200: '#fad68b',
+    300: '#f7c154',
+    400: '#f4af2e',
+    500: '#f0a11a',
+    600: '#d4870f',
+    700: '#b06c0e',
+    800: '#8c5612',
+    900: '#734711',
+    DEFAULT: '#f0a11a',
 };
 
 /** @type {import('tailwindcss').Config} */
@@ -31,7 +48,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -40,6 +57,7 @@ export default {
             },
             colors: {
                 brand,
+                gold,
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {

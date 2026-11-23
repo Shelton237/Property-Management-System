@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandLogo from '@/components/BrandLogo.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import Alert from '@/components/ui/Alert.vue';
 import Button from '@/components/ui/Button.vue';
@@ -7,24 +8,24 @@ import PasswordInput from '@/components/ui/PasswordInput.vue';
 import TextInput from '@/components/ui/TextInput.vue';
 import { useTranslations } from '@/composables/useTranslations';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { Check } from 'lucide-vue-next';
+import { ArrowRight, BedDouble, CalendarDays, Check, Headset, Lock, LogIn, Mail, ReceiptText } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
 
-const { t, brandName } = useTranslations();
+const { t } = useTranslations();
 
 const currentYear = new Date().getFullYear();
 
-const features = ['planning', 'outlets', 'accounting', 'payments'] as const;
-
 const stats = [
-    { label: 'occupancy_label', value: 'occupancy_value' },
-    { label: 'rate_label', value: 'rate_value' },
-    { label: 'movements_label', value: 'movements_value' },
+    { icon: BedDouble, value: 'occupancy_value', label: 'occupancy_label' },
+    { icon: ReceiptText, value: 'rate_value', label: 'rate_label' },
+    { icon: CalendarDays, value: 'movements_value', label: 'movements_label' },
 ] as const;
+
+const features = ['planning', 'outlets', 'accounting', 'payments'] as const;
 
 const form = useForm({
     email: '',
@@ -42,140 +43,188 @@ const submit = () => {
 <template>
     <Head :title="t('login.page_title')" />
 
-    <div class="min-h-screen bg-white dark:bg-slate-950 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <!-- Form column: the only one shown on small screens. -->
-        <div class="flex min-h-screen flex-col px-6 py-8 sm:px-10 lg:px-14">
-            <header class="flex items-center justify-between gap-4">
-                <Link
-                    :href="route('home')"
-                    class="flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
-                >
-                    <span class="h-2.5 w-2.5 rounded-sm bg-brand-800 dark:bg-brand-500" aria-hidden="true" />
-                    <span class="text-base font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-                        {{ brandName }}
-                    </span>
-                </Link>
+    <div class="relative min-h-screen overflow-hidden bg-[#f7f9fc] dark:bg-slate-950">
+        <!-- Decorative corner curves, desktop only. -->
+        <div class="pointer-events-none absolute -left-28 -top-28 hidden h-56 w-56 rounded-full bg-brand-800 lg:block" aria-hidden="true" />
+        <div
+            class="pointer-events-none absolute -left-[104px] -top-[104px] hidden h-72 w-72 rounded-full border-[7px] border-gold-500 lg:block"
+            aria-hidden="true"
+        />
+        <div
+            class="pointer-events-none absolute -bottom-40 -left-28 hidden h-80 w-80 rounded-full border-[7px] border-gold-500 lg:block"
+            aria-hidden="true"
+        />
 
-                <LanguageSwitcher />
-            </header>
+        <div class="relative z-10 min-h-screen lg:grid lg:grid-cols-[44fr_56fr]">
+            <!-- Form column: the only one shown on small screens. -->
+            <div class="flex min-h-screen flex-col px-4 py-5 sm:px-8 lg:min-h-0">
+                <div class="flex flex-1 items-center justify-center">
+                    <div
+                        class="w-full max-w-[620px] rounded-[28px] bg-white px-6 py-8 shadow-[0_30px_80px_-40px_rgba(16,30,69,0.45)] dark:bg-slate-900 sm:px-12 sm:py-10"
+                    >
+                        <header class="flex items-start justify-between gap-4">
+                            <BrandLogo />
+                            <LanguageSwitcher />
+                        </header>
 
-            <main class="flex flex-1 items-center justify-center py-10">
-                <div class="w-full max-w-[400px]">
-                    <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-                        {{ t('login.title') }}
-                    </h1>
-                    <p class="mt-1.5 text-sm text-slate-600 dark:text-slate-400">
-                        {{ t('login.subtitle') }}
-                    </p>
-
-                    <div v-if="status" class="mt-6">
-                        <Alert variant="success" :message="status" />
-                    </div>
-
-                    <div v-if="form.errors.auth" class="mt-6">
-                        <Alert variant="error" :title="t('login.error_title')" :message="form.errors.auth" />
-                    </div>
-
-                    <form class="mt-6 grid gap-5" novalidate @submit.prevent="submit">
-                        <TextInput
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            autocomplete="email"
-                            autofocus
-                            required
-                            :label="t('login.email_label')"
-                            :placeholder="t('login.email_placeholder')"
-                            :error="form.errors.email"
-                        />
-
-                        <PasswordInput
-                            id="password"
-                            v-model="form.password"
-                            autocomplete="current-password"
-                            required
-                            :label="t('login.password_label')"
-                            :placeholder="t('login.password_placeholder')"
-                            :show-label="t('login.password_show')"
-                            :hide-label="t('login.password_hide')"
-                            :error="form.errors.password"
-                        >
-                            <template #action>
-                                <Link
-                                    v-if="canResetPassword"
-                                    :href="route('password.request')"
-                                    class="rounded text-sm font-medium text-brand-800 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-400 dark:focus-visible:ring-offset-slate-950"
-                                >
-                                    {{ t('login.forgot') }}
-                                </Link>
-                            </template>
-                        </PasswordInput>
-
-                        <Checkbox id="remember" v-model="form.remember" :label="t('login.remember')" />
-
-                        <Button type="submit" :loading="form.processing" :loading-label="t('login.submitting')">
-                            {{ t('login.submit') }}
-                        </Button>
-                    </form>
-
-                    <div class="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-                        <p class="text-sm font-medium text-slate-900 dark:text-slate-100">
-                            {{ t('login.trial_question') }}
+                        <h1 class="mt-10 text-[44px] font-extrabold leading-none tracking-tight text-brand-800 dark:text-white">
+                            {{ t('login.title') }}
+                        </h1>
+                        <span class="mt-4 block h-1 w-[90px] rounded-full bg-gold-500" aria-hidden="true" />
+                        <p class="mt-3 text-[15px] text-slate-500 dark:text-slate-400">
+                            {{ t('login.subtitle') }}
                         </p>
-                        <Link
-                            :href="route('register')"
-                            class="mt-0.5 inline-block rounded text-sm font-semibold text-brand-800 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-400 dark:focus-visible:ring-offset-slate-950"
-                        >
-                            {{ t('login.trial_cta') }}
-                        </Link>
+
+                        <div v-if="status" class="mt-6">
+                            <Alert variant="success" :message="status" />
+                        </div>
+
+                        <div v-if="form.errors.auth" class="mt-6">
+                            <Alert variant="error" :title="t('login.error_title')" :message="form.errors.auth" />
+                        </div>
+
+                        <form class="mt-7 grid gap-5" novalidate @submit.prevent="submit">
+                            <TextInput
+                                id="email"
+                                v-model="form.email"
+                                type="email"
+                                autocomplete="email"
+                                autofocus
+                                required
+                                :icon="Mail"
+                                :label="t('login.email_label')"
+                                :placeholder="t('login.email_placeholder')"
+                                :error="form.errors.email"
+                            />
+
+                            <PasswordInput
+                                id="password"
+                                v-model="form.password"
+                                autocomplete="current-password"
+                                required
+                                :icon="Lock"
+                                :label="t('login.password_label')"
+                                :placeholder="t('login.password_placeholder')"
+                                :show-label="t('login.password_show')"
+                                :hide-label="t('login.password_hide')"
+                                :error="form.errors.password"
+                            >
+                                <template #action>
+                                    <Link
+                                        v-if="canResetPassword"
+                                        :href="route('password.request')"
+                                        class="rounded text-[15px] font-medium text-brand-600 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-900"
+                                    >
+                                        {{ t('login.forgot') }}
+                                    </Link>
+                                </template>
+                            </PasswordInput>
+
+                            <Checkbox id="remember" v-model="form.remember" :label="t('login.remember')" />
+
+                            <Button type="submit" class="mt-1" :loading="form.processing" :loading-label="t('login.submitting')">
+                                <template #icon>
+                                    <LogIn class="h-[18px] w-[18px]" aria-hidden="true" />
+                                </template>
+                                {{ t('login.submit') }}
+                            </Button>
+                        </form>
+
+                        <div class="mt-7 flex items-center gap-4 rounded-2xl bg-slate-100/70 px-5 py-4 dark:bg-slate-800">
+                            <span
+                                class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-brand-800 dark:bg-slate-900 dark:text-slate-100"
+                                aria-hidden="true"
+                            >
+                                <Headset class="h-5 w-5" />
+                            </span>
+
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-brand-800 dark:text-slate-100">
+                                    {{ t('login.trial_question') }}
+                                </p>
+                                <Link
+                                    :href="route('register')"
+                                    class="mt-0.5 inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-700 underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-800"
+                                >
+                                    {{ t('login.trial_cta') }}
+                                    <ArrowRight class="h-4 w-4" aria-hidden="true" />
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </main>
 
-            <footer class="text-xs text-slate-500 dark:text-slate-500">
-                {{ t('common.footer', { year: currentYear }) }}
-            </footer>
-        </div>
-
-        <!-- Presentation panel: desktop only, decorative. -->
-        <aside
-            class="relative hidden overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-600 lg:flex lg:flex-col lg:justify-center lg:px-14 lg:py-16"
-            aria-hidden="true"
-        >
-            <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
-            <div class="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-black/20 blur-2xl" />
-
-            <div class="relative max-w-xl">
-                <p class="text-3xl font-semibold leading-tight tracking-tight text-white xl:text-4xl">
-                    {{ t('login.panel.headline') }}
-                </p>
-
-                <dl class="mt-10 grid grid-cols-3 gap-3">
-                    <div v-for="stat in stats" :key="stat.label" class="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-                        <dd class="text-xl font-semibold text-white xl:text-2xl">
-                            {{ t(`login.panel.stats.${stat.value}`) }}
-                        </dd>
-                        <dt class="mt-1 text-xs font-medium leading-snug text-brand-50/80">
-                            {{ t(`login.panel.stats.${stat.label}`) }}
-                        </dt>
-                    </div>
-                </dl>
-
-                <p class="mt-2.5 text-[11px] text-brand-50/60">
-                    {{ t('login.panel.figures_note') }}
-                </p>
-
-                <ul class="mt-10 grid gap-3.5">
-                    <li v-for="feature in features" :key="feature" class="flex items-start gap-3">
-                        <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20">
-                            <Check class="h-3 w-3 text-white" />
-                        </span>
-                        <span class="text-sm text-brand-50">
-                            {{ t(`login.panel.features.${feature}`) }}
-                        </span>
-                    </li>
-                </ul>
+                <footer class="pb-3 pt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+                    {{ t('common.footer', { year: currentYear }) }}
+                </footer>
             </div>
-        </aside>
+
+            <!-- Presentation panel: desktop only, decorative. -->
+            <aside class="relative hidden overflow-hidden lg:block" aria-hidden="true">
+                <!--
+                    The photograph is optional: drop a file at
+                    public/images/login-cover.jpg and it shows through the
+                    overlay. Without it, the panel stays a plain navy field.
+                -->
+                <div class="absolute inset-0 bg-brand-900 bg-[url('/images/login-cover.jpg')] bg-cover bg-center" />
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/95 to-brand-900/70" />
+
+                <!-- Curved boundary with the form column. -->
+                <svg
+                    class="absolute inset-y-0 -left-px z-10 h-full w-[90px] text-[#f7f9fc] dark:text-slate-950"
+                    viewBox="0 0 90 1000"
+                    preserveAspectRatio="none"
+                    fill="currentColor"
+                >
+                    <path d="M90 0 H0 V1000 H90 C38 810 38 190 90 0 Z" />
+                </svg>
+
+                <!-- Gold curves, bottom right. -->
+                <div class="pointer-events-none absolute -bottom-40 -right-24 h-80 w-80 rounded-full border-[7px] border-gold-500/90" />
+                <div class="pointer-events-none absolute -bottom-24 -right-40 h-72 w-72 rounded-full border-[7px] border-gold-500/60" />
+
+                <div class="relative z-20 flex h-full flex-col justify-center px-16 py-14 2xl:px-24">
+                    <h2 class="max-w-[640px] text-[40px] font-extrabold leading-[1.12] tracking-tight text-white 2xl:text-[52px]">
+                        {{ t('login.panel.headline_before') }}<br />
+                        <span class="text-gold-400">{{ t('login.panel.headline_highlight') }}</span
+                        ><br />
+                        {{ t('login.panel.headline_after') }}
+                    </h2>
+
+                    <span class="mt-8 block h-1 w-[110px] rounded-full bg-gold-500" />
+
+                    <p class="mt-7 max-w-[460px] text-[15px] leading-relaxed text-white/75">
+                        {{ t('login.panel.intro') }}
+                    </p>
+
+                    <dl class="mt-10 grid max-w-[660px] grid-cols-3 gap-5">
+                        <div
+                            v-for="stat in stats"
+                            :key="stat.label"
+                            class="rounded-2xl border border-white/15 bg-white/10 px-5 py-5 backdrop-blur-sm"
+                        >
+                            <component :is="stat.icon" class="h-6 w-6 text-gold-400" />
+                            <dd class="mt-5 text-[26px] font-extrabold leading-tight text-white 2xl:text-[30px]">
+                                {{ t(`login.panel.stats.${stat.value}`) }}
+                            </dd>
+                            <dt class="mt-1.5 text-[13px] leading-snug text-white/70">
+                                {{ t(`login.panel.stats.${stat.label}`) }}
+                            </dt>
+                        </div>
+                    </dl>
+
+                    <ul class="mt-10 grid gap-4">
+                        <li v-for="feature in features" :key="feature" class="flex items-center gap-3.5">
+                            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-500">
+                                <Check class="h-3.5 w-3.5 text-white" :stroke-width="3.5" />
+                            </span>
+                            <span class="text-[15px] text-white/90">
+                                {{ t(`login.panel.features.${feature}`) }}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
     </div>
 </template>

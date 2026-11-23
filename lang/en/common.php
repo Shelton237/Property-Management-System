@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 return [
 
+    'tagline' => 'Hotel Management',
+
     'language' => 'Language',
-    'language_fr' => 'FR',
-    'language_en' => 'EN',
-    'language_fr_full' => 'Passer en français',
-    'language_en_full' => 'Switch to English',
+    'language_fr_name' => 'Français',
+    'language_en_name' => 'English',
 
     'footer' => 'Encrypted connection · © :year :brand',
 

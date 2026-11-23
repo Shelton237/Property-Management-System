@@ -7,10 +7,10 @@ return [
     'page_title' => 'Connexion',
 
     'title' => 'Bon retour',
-    'subtitle' => 'Connectez-vous à l’espace de votre hôtel',
+    'subtitle' => 'Connectez-vous à votre espace de gestion hôtelier',
 
     'email_label' => 'Adresse e-mail',
-    'email_placeholder' => 'vous@votre-hotel.cm',
+    'email_placeholder' => 'vous@votre-hotel.com',
 
     'password_label' => 'Mot de passe',
     'password_placeholder' => 'Votre mot de passe',
@@ -29,14 +29,16 @@ return [
     'trial_cta' => 'Démarrez votre essai gratuit de 14 jours',
 
     'panel' => [
-        'headline' => 'Gérez réception, restaurant et comptabilité depuis un seul écran',
-        'figures_note' => 'Chiffres donnés à titre d’illustration',
+        'headline_before' => 'Gérez réception,',
+        'headline_highlight' => 'restaurant et comptabilité',
+        'headline_after' => 'depuis un seul écran',
+        'intro' => 'Une solution complète, moderne et intuitive pour une gestion hôtelière plus efficace.',
         'stats' => [
             'occupancy_label' => 'Taux d’occupation',
             'occupancy_value' => '78 %',
             'rate_label' => 'Prix moyen par nuit',
             'rate_value' => '42 500 FCFA',
-            'movements_label' => 'Arrivées / départs du jour',
+            'movements_label' => 'Arrivées / Départs du jour',
             'movements_value' => '24 / 19',
         ],
         'features' => [

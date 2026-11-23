@@ -7,10 +7,10 @@ return [
     'page_title' => 'Sign in',
 
     'title' => 'Welcome back',
-    'subtitle' => 'Sign in to your hotel workspace',
+    'subtitle' => 'Sign in to your hotel management workspace',
 
     'email_label' => 'Email address',
-    'email_placeholder' => 'you@your-hotel.cm',
+    'email_placeholder' => 'you@your-hotel.com',
 
     'password_label' => 'Password',
     'password_placeholder' => 'Your password',
@@ -29,8 +29,10 @@ return [
     'trial_cta' => 'Start your free 14 day trial',
 
     'panel' => [
-        'headline' => 'Run your front desk, restaurant and accounting from a single screen',
-        'figures_note' => 'Figures shown for illustration only',
+        'headline_before' => 'Run your front desk,',
+        'headline_highlight' => 'restaurant and accounting',
+        'headline_after' => 'from a single screen',
+        'intro' => 'A complete, modern and intuitive solution for running a hotel more efficiently.',
         'stats' => [
             'occupancy_label' => 'Occupancy rate',
             'occupancy_value' => '78%',

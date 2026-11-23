@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 return [
 
-    'language' => 'Langue',
-    'language_fr' => 'FR',
-    'language_en' => 'EN',
-    'language_fr_full' => 'Passer en français',
-    'language_en_full' => 'Switch to English',
+    'tagline' => 'Hotel Management',
 
-    'footer' => 'Connexion chiffrée · © :year :brand',
+    'language' => 'Langue',
+    'language_fr_name' => 'Français',
+    'language_en_name' => 'English',
+
+    'footer' => 'Connexion sécurisée · © :year :brand',
 
     'coming_soon_title' => 'Bientôt disponible',
     'coming_soon_body' => 'La création de compte en ligne arrive prochainement. Contactez-nous pour ouvrir l’espace de votre hôtel.',
