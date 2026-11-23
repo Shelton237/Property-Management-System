@@ -1,50 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that's loaded on the first page visit.
-     *
-     * @see https://inertiajs.com/server-side-setup#root-template
-     *
-     * @var string
+     * The root template loaded on the first page visit.
      */
     protected $rootView = 'app';
 
     /**
-     * Determines the current asset version.
+     * Translation groups handed to the front end, so no component holds a
+     * visible string of its own.
      *
-     * @see https://inertiajs.com/asset-versioning
+     * @var list<string>
      */
-    public function version(Request $request): ?string
-    {
-        return parent::version($request);
-    }
+    private const TRANSLATION_GROUPS = ['common', 'login', 'dashboard', 'password_reset'];
 
     /**
      * Define the props that are shared by default.
-     *
-     * @see https://inertiajs.com/shared-data
      *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
-        return array_merge(parent::share($request), [
+        return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'brand' => [
+                'name' => config('branding.name'),
+            ],
             'auth' => [
                 'user' => $request->user(),
             ],
-        ]);
+            'locale' => app()->getLocale(),
+            'locales' => config('branding.locales'),
+            'translations' => $this->translations(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function translations(): array
+    {
+        $translations = [];
+
+        foreach (self::TRANSLATION_GROUPS as $group) {
+            $lines = trans($group);
+
+            $translations[$group] = is_array($lines) ? $lines : [];
+        }
+
+        return $translations;
     }
 }

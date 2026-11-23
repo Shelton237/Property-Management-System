@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -12,16 +16,20 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Refusals that concern the whole attempt rather than one field.
+     *
+     * They are reported under their own key so the login page can show them in
+     * a single alert above the form, and keep per field messages under the
+     * field they belong to.
      */
+    public const REFUSAL_KEY = 'auth';
+
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -29,33 +37,56 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'remember' => ['boolean'],
         ];
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Authenticate the request, refusing deactivated accounts and suspended
+     * hotels with their own message.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * Credentials are checked before those two cases, so a wrong password never
+     * reveals whether an account exists or what state it is in.
+     *
+     * @throws ValidationException
      */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $user = User::where('email', (string) $this->string('email'))->first();
+
+        if (! $user || ! Hash::check((string) $this->string('password'), $user->password)) {
+            // Only a failed credential check counts towards the rate limit: the
+            // other refusals are not brute force attempts.
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                self::REFUSAL_KEY => trans('auth.failed'),
             ]);
         }
+
+        if (! $user->canSignIn()) {
+            throw ValidationException::withMessages([
+                self::REFUSAL_KEY => trans('auth.inactive'),
+            ]);
+        }
+
+        if ($user->hotelIsSuspended()) {
+            throw ValidationException::withMessages([
+                self::REFUSAL_KEY => trans('auth.hotel_suspended'),
+            ]);
+        }
+
+        Auth::login($user, $this->boolean('remember'));
 
         RateLimiter::clear($this->throttleKey());
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Five attempts per minute, per email address and IP address pair.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {
@@ -68,18 +99,15 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            self::REFUSAL_KEY => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
         ]);
     }
 
-    /**
-     * Get the rate limiting throttle key for the request.
-     */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower((string) $this->string('email')).'|'.$this->ip());
     }
 }

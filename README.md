@@ -1,8 +1,22 @@
 # Property Management System
 
-Application de gestion immobiliere (biens, bailleurs, locataires, baux, quittances,
-encaissements, charges, relances). Le perimetre fonctionnel detaille reste a cadrer :
-ce depot contient pour l'instant le socle technique et l'authentification.
+SaaS de gestion hoteliere multi-hotels, destine au Cameroun et a l'Afrique
+francophone : reception, restaurant et comptabilite depuis une seule application.
+
+En ligne sur <https://pms.diginova.cm>.
+
+## Etat actuel
+
+Seules l'authentification et le socle multi-hotels sont implementes.
+
+| Implemente | Pas encore |
+| --- | --- |
+| Connexion e-mail / mot de passe, « rester connecte » | Planning des chambres, reservations |
+| Refus des comptes desactives et des hotels suspendus | Restaurant, blanchisserie, banquets |
+| Limitation a 5 tentatives par minute (e-mail + IP) | Comptabilite et pieces justificatives |
+| Mot de passe oublie et reinitialisation, mails en francais | Paiements carte / Orange Money / MTN MoMo |
+| Tableau de bord minimal, deconnexion | Creation de compte en ligne (`/register` affiche « Bientot disponible ») |
+| Interface francais / anglais | Roles reellement appliques (les valeurs existent, aucune autorisation n'en depend encore) |
 
 ## Stack
 
@@ -10,13 +24,30 @@ ce depot contient pour l'instant le socle technique et l'authentification.
 | --- | --- |
 | Back-end | Laravel 12 (PHP 8.3) |
 | Front-end | Vue 3.5 + Inertia 2 + TypeScript |
-| Styles | Tailwind CSS 3.4 + composants shadcn-vue |
+| Styles | Tailwind CSS 3.4, police Inter, palette de marque vert emeraude |
 | Build | Vite 6 |
 | Base de donnees | MySQL 8.0 |
+| Tests | Pest 3 |
 | Serveur web | Apache 2.4 (mod_php) |
 
 Ce choix suit l'infrastructure existante : le serveur heberge deja une vingtaine
 d'applications Laravel/Inertia derriere Apache, sans Node en production.
+
+## Nom du produit
+
+Le nom affiche (logo, encart d'essai, pied de page, titre de l'onglet) vient d'un
+seul endroit : `config/branding.php`, surchargeable par la variable
+d'environnement `BRAND_NAME`. Aucun composant ne contient le nom du produit.
+
+```dotenv
+BRAND_NAME="Votre marque"
+```
+
+## Couleur de marque
+
+La palette est definie une seule fois, dans l'objet `brand` en haut de
+[`tailwind.config.js`](tailwind.config.js). Les composants n'utilisent que les
+classes `brand-*`, donc changer de couleur ne demande qu'une edition de cet objet.
 
 ## Developpement
 
@@ -31,11 +62,48 @@ npm run dev                # HMR Vite
 npm run build              # build de production
 composer test              # tests
 npm run lint               # lint du front
+npm run format             # formatage du front
 ```
 
-Le site est servi par Apache sur <https://pms.diginova.cm> : pas besoin de
-`php artisan serve`. Apres modification d'un fichier de configuration ou de
-`.env`, rafraichir le cache : `php artisan config:cache`.
+Le site est servi par Apache : pas besoin de `php artisan serve`. Apres
+modification d'un fichier de configuration, d'une route ou de `.env`, rafraichir
+les caches : `php artisan optimize` (ou `php artisan optimize:clear`).
+
+### Base de donnees
+
+MySQL tourne dans un conteneur dedie, expose sur `127.0.0.1:3318` :
+
+```bash
+docker ps --filter name=pms-db
+docker start pms-db        # si arrete
+```
+
+Base applicative `pms`, base de test `pms_test`, utilisateur `pms`. Le mot de
+passe applicatif est dans `.env`, non versionne ; le mot de passe root du
+conteneur est dans `~/.pms-db-root.txt` (hors depot, chmod 600).
+
+Migrations et donnees de demonstration :
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+### Comptes de demonstration
+
+`DemoSeeder` cree l'hotel « Hotel Demo Yaounde » (en essai, 14 jours) et trois
+comptes partageant le mot de passe `password` :
+
+| Compte | Role | Etat |
+| --- | --- | --- |
+| `owner@demo.test` | owner | actif |
+| `reception@demo.test` | receptionist | actif |
+| `inactif@demo.test` | receptionist | desactive, sert a verifier le refus |
+
+> Ces comptes ont un mot de passe connu de tous. Ils sont faits pour une
+> demonstration, pas pour une mise en service reelle : supprimez-les avant
+> d'ouvrir l'application a de vrais clients
+> (`php artisan tinker --execute="App\Models\User::where('email','like','%@demo.test')->delete();"`).
 
 ### Tests : toujours `composer test`
 
@@ -49,18 +117,16 @@ y est mise en cache, et dans cet etat Laravel ignore `phpunit.xml` : un
 `config:cache`. Seconde barriere : toute base dont le nom ne finit pas par
 `_test` est rejetee.
 
-### Base de donnees
+## Traductions
 
-En developpement, MySQL tourne dans un conteneur dedie :
+Aucun texte visible n'est ecrit dans un composant. Les lignes vivent dans
+`lang/fr` et `lang/en` ; `HandleInertiaRequests` partage les groupes utiles au
+front, et le composable
+[`useTranslations`](resources/js/composables/useTranslations.ts) expose `t()`.
+Le placeholder `:brand` est toujours disponible.
 
-```bash
-docker ps --filter name=pms-db
-docker start pms-db        # si arrete
-```
-
-Il ecoute sur `127.0.0.1:3318` (base `pms`, utilisateur `pms`). Le mot de passe
-applicatif est dans `.env`, non versionne. Le mot de passe root du conteneur est
-dans `~/.pms-db-root.txt` (hors depot, chmod 600).
+Le selecteur FR / EN appelle `GET /locale/{locale}`, qui memorise le choix en
+session. A defaut, la langue du compte puis `APP_LOCALE` s'appliquent.
 
 ## Mise en production
 
@@ -71,7 +137,7 @@ Le vhost, les droits fichiers et le certificat TLS ont ete installes par
 [`deploy/provision.sh`](deploy/provision.sh), a lancer **une seule fois** avec sudo :
 
 ```bash
-sudo bash ~/PROPERTY-MANAGEMENT-SYSTEM/deploy/provision.sh
+sudo bash /var/www/PROPERTY-MANAGEMENT-SYSTEM/deploy/provision.sh
 ```
 
 Le script est idempotent : il deplace l'application vers `/var/www`, applique les

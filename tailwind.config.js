@@ -1,5 +1,24 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 
+/*
+ * Brand palette: deep emerald. This object is the single place to change the
+ * product colour, every component refers to it through the `brand-*` classes.
+ */
+const brand = {
+    50: '#ecfdf5',
+    100: '#d1fae5',
+    200: '#a7f3d0',
+    300: '#6ee7b7',
+    400: '#34d399',
+    500: '#10b981',
+    600: '#059669',
+    700: '#047857',
+    800: '#065f46',
+    900: '#064e3b',
+    950: '#022c22',
+    DEFAULT: '#065f46',
+};
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ['class'],
@@ -12,7 +31,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Instrument Sans', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -20,6 +39,7 @@ export default {
                 sm: 'calc(var(--radius) - 4px)',
             },
             colors: {
+                brand,
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {

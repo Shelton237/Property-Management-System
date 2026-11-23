@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
+import Button from '@/components/ui/Button.vue';
+import PasswordInput from '@/components/ui/PasswordInput.vue';
+import TextInput from '@/components/ui/TextInput.vue';
+import { useTranslations } from '@/composables/useTranslations';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
-interface Props {
-    token: string;
+const props = defineProps<{
     email: string;
-}
+    token: string;
+}>();
 
-const props = defineProps<Props>();
+const { t, brandName } = useTranslations();
+
+const currentYear = new Date().getFullYear();
 
 const form = useForm({
     token: props.token,
@@ -23,59 +24,80 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('password.store'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
 </script>
 
 <template>
-    <AuthLayout title="Reset password" description="Please enter your new password below">
-        <Head title="Reset password" />
+    <Head :title="t('password_reset.reset_page_title')" />
 
-        <form @submit.prevent="submit">
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="email">Email</Label>
-                    <Input id="email" type="email" name="email" autocomplete="email" v-model="form.email" class="mt-1 block w-full" readonly />
-                    <InputError :message="form.errors.email" class="mt-2" />
-                </div>
+    <div class="flex min-h-screen flex-col bg-white px-6 py-8 dark:bg-slate-950 sm:px-10">
+        <header class="flex items-center justify-between gap-4">
+            <Link
+                :href="route('login')"
+                class="flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+            >
+                <span class="h-2.5 w-2.5 rounded-sm bg-brand-800 dark:bg-brand-500" aria-hidden="true" />
+                <span class="text-base font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                    {{ brandName }}
+                </span>
+            </Link>
 
-                <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
+            <LanguageSwitcher />
+        </header>
+
+        <main class="flex flex-1 items-center justify-center py-10">
+            <div class="w-full max-w-[400px]">
+                <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                    {{ t('password_reset.reset_title') }}
+                </h1>
+                <p class="mt-1.5 text-sm text-slate-600 dark:text-slate-400">
+                    {{ t('password_reset.reset_subtitle') }}
+                </p>
+
+                <form class="mt-6 grid gap-5" novalidate @submit.prevent="submit">
+                    <TextInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        autocomplete="email"
+                        required
+                        :label="t('password_reset.email_label')"
+                        :error="form.errors.email"
+                    />
+
+                    <PasswordInput
                         id="password"
-                        type="password"
-                        name="password"
-                        autocomplete="new-password"
                         v-model="form.password"
-                        class="mt-1 block w-full"
-                        autofocus
-                        placeholder="Password"
-                    />
-                    <InputError :message="form.errors.password" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password_confirmation"> Confirm Password </Label>
-                    <Input
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
                         autocomplete="new-password"
-                        v-model="form.password_confirmation"
-                        class="mt-1 block w-full"
-                        placeholder="Confirm password"
+                        required
+                        :label="t('password_reset.password_label')"
+                        :show-label="t('password_reset.password_show')"
+                        :hide-label="t('password_reset.password_hide')"
+                        :error="form.errors.password"
                     />
-                    <InputError :message="form.errors.password_confirmation" />
-                </div>
 
-                <Button type="submit" class="mt-4 w-full" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Reset password
-                </Button>
+                    <PasswordInput
+                        id="password_confirmation"
+                        v-model="form.password_confirmation"
+                        autocomplete="new-password"
+                        required
+                        :label="t('password_reset.password_confirmation_label')"
+                        :show-label="t('password_reset.password_show')"
+                        :hide-label="t('password_reset.password_hide')"
+                        :error="form.errors.password_confirmation"
+                    />
+
+                    <Button type="submit" :loading="form.processing" :loading-label="t('password_reset.saving')">
+                        {{ t('password_reset.save') }}
+                    </Button>
+                </form>
             </div>
-        </form>
-    </AuthLayout>
+        </main>
+
+        <footer class="text-xs text-slate-500 dark:text-slate-500">
+            {{ t('common.footer', { year: currentYear }) }}
+        </footer>
+    </div>
 </template>
