@@ -38,7 +38,8 @@ return [
             'occupancy_value' => '78 %',
             'rate_label' => 'Prix moyen par nuit',
             'rate_value' => '42 500 FCFA',
-            'movements_label' => 'Arrivées / Départs du jour',
+            // Non breaking space: "du jour" must not be split across two lines.
+            'movements_label' => "Arrivées / Départs du\u{A0}jour",
             'movements_value' => '24 / 19',
         ],
         'features' => [

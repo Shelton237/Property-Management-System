@@ -45,116 +45,117 @@ const submit = () => {
 
     <div class="relative min-h-screen overflow-hidden bg-[#f7f9fc] dark:bg-slate-950">
         <!-- Decorative corner curves, desktop only. -->
-        <div class="pointer-events-none absolute -left-28 -top-28 hidden h-56 w-56 rounded-full bg-brand-800 lg:block" aria-hidden="true" />
         <div
-            class="pointer-events-none absolute -left-[104px] -top-[104px] hidden h-72 w-72 rounded-full border-[7px] border-gold-500 lg:block"
+            class="pointer-events-none absolute -left-[88px] -top-[88px] hidden h-[176px] w-[176px] rounded-full bg-brand-800 lg:block"
             aria-hidden="true"
         />
         <div
-            class="pointer-events-none absolute -bottom-40 -left-28 hidden h-80 w-80 rounded-full border-[7px] border-gold-500 lg:block"
+            class="pointer-events-none absolute -left-[124px] -top-[124px] hidden h-[248px] w-[248px] rounded-full border-[6px] border-gold-500 lg:block"
+            aria-hidden="true"
+        />
+        <div
+            class="pointer-events-none absolute -bottom-[132px] -left-[132px] hidden h-[264px] w-[264px] rounded-full border-[6px] border-gold-500 lg:block"
             aria-hidden="true"
         />
 
         <div class="relative z-10 min-h-screen lg:grid lg:grid-cols-[44fr_56fr]">
             <!-- Form column: the only one shown on small screens. -->
-            <div class="flex min-h-screen flex-col px-4 py-5 sm:px-8 lg:min-h-0">
-                <div class="flex flex-1 items-center justify-center">
-                    <div
-                        class="w-full max-w-[620px] rounded-[28px] bg-white px-6 py-8 shadow-[0_30px_80px_-40px_rgba(16,30,69,0.45)] dark:bg-slate-900 sm:px-12 sm:py-10"
-                    >
-                        <header class="flex items-start justify-between gap-4">
-                            <BrandLogo />
-                            <LanguageSwitcher />
-                        </header>
+            <div class="flex min-h-screen flex-col px-4 py-5 sm:px-7 sm:py-7">
+                <div
+                    class="mx-auto flex w-full max-w-[740px] flex-1 flex-col justify-center rounded-[28px] bg-white px-6 py-9 shadow-[0_30px_80px_-45px_rgba(16,30,69,0.4)] dark:bg-slate-900 sm:px-14 sm:py-12"
+                >
+                    <header class="flex items-start justify-between gap-4">
+                        <BrandLogo />
+                        <LanguageSwitcher />
+                    </header>
 
-                        <h1 class="mt-10 text-[44px] font-extrabold leading-none tracking-tight text-brand-800 dark:text-white">
-                            {{ t('login.title') }}
-                        </h1>
-                        <span class="mt-4 block h-1 w-[90px] rounded-full bg-gold-500" aria-hidden="true" />
-                        <p class="mt-3 text-[15px] text-slate-500 dark:text-slate-400">
-                            {{ t('login.subtitle') }}
-                        </p>
+                    <h1 class="mt-11 text-[42px] font-extrabold leading-none tracking-tight text-brand-800 dark:text-white sm:text-[50px]">
+                        {{ t('login.title') }}
+                    </h1>
+                    <span class="mt-5 block h-1 w-[90px] rounded-full bg-gold-500" aria-hidden="true" />
+                    <p class="mt-4 text-base text-slate-500 dark:text-slate-400">
+                        {{ t('login.subtitle') }}
+                    </p>
 
-                        <div v-if="status" class="mt-6">
-                            <Alert variant="success" :message="status" />
-                        </div>
+                    <div v-if="status" class="mt-6">
+                        <Alert variant="success" :message="status" />
+                    </div>
 
-                        <div v-if="form.errors.auth" class="mt-6">
-                            <Alert variant="error" :title="t('login.error_title')" :message="form.errors.auth" />
-                        </div>
+                    <div v-if="form.errors.auth" class="mt-6">
+                        <Alert variant="error" :title="t('login.error_title')" :message="form.errors.auth" />
+                    </div>
 
-                        <form class="mt-7 grid gap-5" novalidate @submit.prevent="submit">
-                            <TextInput
-                                id="email"
-                                v-model="form.email"
-                                type="email"
-                                autocomplete="email"
-                                autofocus
-                                required
-                                :icon="Mail"
-                                :label="t('login.email_label')"
-                                :placeholder="t('login.email_placeholder')"
-                                :error="form.errors.email"
-                            />
+                    <form class="mt-8 grid gap-6" novalidate @submit.prevent="submit">
+                        <TextInput
+                            id="email"
+                            v-model="form.email"
+                            type="email"
+                            autocomplete="email"
+                            autofocus
+                            required
+                            :icon="Mail"
+                            :label="t('login.email_label')"
+                            :placeholder="t('login.email_placeholder')"
+                            :error="form.errors.email"
+                        />
 
-                            <PasswordInput
-                                id="password"
-                                v-model="form.password"
-                                autocomplete="current-password"
-                                required
-                                :icon="Lock"
-                                :label="t('login.password_label')"
-                                :placeholder="t('login.password_placeholder')"
-                                :show-label="t('login.password_show')"
-                                :hide-label="t('login.password_hide')"
-                                :error="form.errors.password"
-                            >
-                                <template #action>
-                                    <Link
-                                        v-if="canResetPassword"
-                                        :href="route('password.request')"
-                                        class="rounded text-[15px] font-medium text-brand-600 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-900"
-                                    >
-                                        {{ t('login.forgot') }}
-                                    </Link>
-                                </template>
-                            </PasswordInput>
-
-                            <Checkbox id="remember" v-model="form.remember" :label="t('login.remember')" />
-
-                            <Button type="submit" class="mt-1" :loading="form.processing" :loading-label="t('login.submitting')">
-                                <template #icon>
-                                    <LogIn class="h-[18px] w-[18px]" aria-hidden="true" />
-                                </template>
-                                {{ t('login.submit') }}
-                            </Button>
-                        </form>
-
-                        <div class="mt-7 flex items-center gap-4 rounded-2xl bg-slate-100/70 px-5 py-4 dark:bg-slate-800">
-                            <span
-                                class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-brand-800 dark:bg-slate-900 dark:text-slate-100"
-                                aria-hidden="true"
-                            >
-                                <Headset class="h-5 w-5" />
-                            </span>
-
-                            <div class="min-w-0">
-                                <p class="text-sm font-semibold text-brand-800 dark:text-slate-100">
-                                    {{ t('login.trial_question') }}
-                                </p>
+                        <PasswordInput
+                            id="password"
+                            v-model="form.password"
+                            autocomplete="current-password"
+                            required
+                            :icon="Lock"
+                            :label="t('login.password_label')"
+                            :placeholder="t('login.password_placeholder')"
+                            :show-label="t('login.password_show')"
+                            :hide-label="t('login.password_hide')"
+                            :error="form.errors.password"
+                        >
+                            <template #action>
                                 <Link
-                                    :href="route('register')"
-                                    class="mt-0.5 inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-700 underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-800"
+                                    v-if="canResetPassword"
+                                    :href="route('password.request')"
+                                    class="rounded text-[15px] font-medium text-brand-600 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-900"
                                 >
-                                    {{ t('login.trial_cta') }}
-                                    <ArrowRight class="h-4 w-4" aria-hidden="true" />
+                                    {{ t('login.forgot') }}
                                 </Link>
-                            </div>
+                            </template>
+                        </PasswordInput>
+
+                        <Checkbox id="remember" v-model="form.remember" :label="t('login.remember')" />
+
+                        <Button type="submit" class="mt-1" :loading="form.processing" :loading-label="t('login.submitting')">
+                            <template #icon>
+                                <LogIn class="h-[18px] w-[18px]" aria-hidden="true" />
+                            </template>
+                            {{ t('login.submit') }}
+                        </Button>
+                    </form>
+
+                    <div class="mt-8 flex items-center gap-4 rounded-2xl bg-slate-100/70 px-5 py-4 dark:bg-slate-800">
+                        <span
+                            class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-brand-800 dark:bg-slate-900 dark:text-slate-100"
+                            aria-hidden="true"
+                        >
+                            <Headset class="h-5 w-5" />
+                        </span>
+
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-brand-800 dark:text-slate-100">
+                                {{ t('login.trial_question') }}
+                            </p>
+                            <Link
+                                :href="route('register')"
+                                class="mt-0.5 inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-700 underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-800"
+                            >
+                                {{ t('login.trial_cta') }}
+                                <ArrowRight class="h-4 w-4" aria-hidden="true" />
+                            </Link>
                         </div>
                     </div>
                 </div>
 
-                <footer class="pb-3 pt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+                <footer class="pt-5 text-center text-xs text-slate-400 dark:text-slate-500">
                     {{ t('common.footer', { year: currentYear }) }}
                 </footer>
             </div>
@@ -171,20 +172,24 @@ const submit = () => {
 
                 <!-- Curved boundary with the form column. -->
                 <svg
-                    class="absolute inset-y-0 -left-px z-10 h-full w-[90px] text-[#f7f9fc] dark:text-slate-950"
-                    viewBox="0 0 90 1000"
+                    class="absolute inset-y-0 -left-px z-10 h-full w-[80px] text-[#f7f9fc] dark:text-slate-950"
+                    viewBox="0 0 80 1000"
                     preserveAspectRatio="none"
                     fill="currentColor"
                 >
-                    <path d="M90 0 H0 V1000 H90 C38 810 38 190 90 0 Z" />
+                    <path d="M80 0 H0 V1000 H80 C44 800 44 200 80 0 Z" />
                 </svg>
 
                 <!-- Gold curves, bottom right. -->
-                <div class="pointer-events-none absolute -bottom-40 -right-24 h-80 w-80 rounded-full border-[7px] border-gold-500/90" />
-                <div class="pointer-events-none absolute -bottom-24 -right-40 h-72 w-72 rounded-full border-[7px] border-gold-500/60" />
+                <div
+                    class="pointer-events-none absolute -bottom-[150px] -right-[90px] h-[300px] w-[300px] rounded-full border-[6px] border-gold-500/90"
+                />
+                <div
+                    class="pointer-events-none absolute -bottom-[96px] -right-[170px] h-[264px] w-[264px] rounded-full border-[6px] border-gold-500/55"
+                />
 
-                <div class="relative z-20 flex h-full flex-col justify-center px-16 py-14 2xl:px-24">
-                    <h2 class="max-w-[640px] text-[40px] font-extrabold leading-[1.12] tracking-tight text-white 2xl:text-[52px]">
+                <div class="relative z-20 flex h-full flex-col justify-center px-16 py-14 2xl:px-20">
+                    <h2 class="max-w-[820px] text-[40px] font-extrabold leading-[1.1] tracking-tight text-white 2xl:text-[48px]">
                         {{ t('login.panel.headline_before') }}<br />
                         <span class="text-gold-400">{{ t('login.panel.headline_highlight') }}</span
                         ><br />
@@ -193,11 +198,11 @@ const submit = () => {
 
                     <span class="mt-8 block h-1 w-[110px] rounded-full bg-gold-500" />
 
-                    <p class="mt-7 max-w-[460px] text-[15px] leading-relaxed text-white/75">
+                    <p class="mt-7 max-w-[470px] text-[15px] leading-relaxed text-white/75">
                         {{ t('login.panel.intro') }}
                     </p>
 
-                    <dl class="mt-10 grid max-w-[660px] grid-cols-3 gap-5">
+                    <dl class="mt-10 grid max-w-[720px] grid-cols-3 gap-5">
                         <div
                             v-for="stat in stats"
                             :key="stat.label"
