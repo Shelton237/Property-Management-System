@@ -23,10 +23,10 @@ withDefaults(
         :type="type"
         :disabled="disabled || loading"
         :aria-busy="loading"
-        class="inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-4 py-4 text-[15px] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-slate-900"
+        class="inline-flex min-h-[48px] w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg px-4 py-3 text-[15px] font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-slate-900"
         :class="
             variant === 'primary'
-                ? 'bg-brand-800 text-white shadow-[0_10px_25px_-12px_rgba(22,41,91,0.8)] hover:bg-brand-900 focus-visible:ring-brand-600'
+                ? 'bg-brand-800 text-white hover:bg-brand-900 focus-visible:ring-brand-600'
                 : 'border border-slate-300 bg-white text-brand-800 hover:bg-slate-50 focus-visible:ring-brand-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800'
         "
     >

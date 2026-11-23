@@ -69,7 +69,7 @@ function isCurrent(name?: string): boolean {
                             :href="route(item.route)"
                             :aria-current="isCurrent(item.route) ? 'page' : undefined"
                             :title="collapsed ? t(`navigation.items.${item.key}`) : undefined"
-                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:focus-visible:ring-offset-slate-900"
+                            class="flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:focus-visible:ring-offset-slate-900"
                             :class="[
                                 collapsed ? 'justify-center px-0' : '',
                                 isCurrent(item.route)
@@ -91,7 +91,7 @@ function isCurrent(name?: string): boolean {
                         <span
                             v-else
                             :title="`${t(`navigation.items.${item.key}`)} — ${t('navigation.coming_soon')}`"
-                            class="flex cursor-default items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-400 dark:text-slate-600"
+                            class="flex min-h-[44px] cursor-default items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 dark:text-slate-600"
                             :class="collapsed ? 'justify-center px-0' : ''"
                         >
                             <component :is="item.icon" class="h-4 w-4 shrink-0" aria-hidden="true" />

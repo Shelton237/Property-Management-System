@@ -28,15 +28,16 @@ const errorId = computed(() => `${props.id}-error`);
 </script>
 
 <template>
-    <div class="grid gap-2">
+    <div class="grid gap-1.5">
         <div class="flex items-baseline justify-between gap-3">
-            <label :for="id" class="flex items-center gap-2.5 text-[15px] font-semibold text-brand-800 dark:text-slate-100">
-                <component :is="icon" v-if="icon" class="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+            <label :for="id" class="flex items-center gap-2 text-[13px] text-slate-600 dark:text-slate-300">
+                <component :is="icon" v-if="icon" class="h-4 w-4 shrink-0" aria-hidden="true" />
                 {{ label }}
             </label>
             <slot name="action" />
         </div>
 
+        <!-- Height kept at 44px: the minimum comfortable touch target. -->
         <input
             :id="id"
             :type="type"
@@ -47,16 +48,16 @@ const errorId = computed(() => `${props.id}-error`);
             :autofocus="autofocus"
             :aria-invalid="error ? 'true' : undefined"
             :aria-describedby="error ? errorId : undefined"
-            class="w-full rounded-xl border bg-field px-4 py-3.5 text-[15px] text-brand-900 transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:bg-slate-800 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus-visible:ring-offset-slate-900"
+            class="h-11 w-full rounded-lg border bg-white px-3.5 text-[15px] text-slate-900 transition placeholder:text-slate-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:bg-slate-800 dark:text-slate-50 dark:placeholder:text-slate-400 dark:focus-visible:ring-offset-slate-900"
             :class="
                 error
                     ? 'border-red-400 dark:border-red-500'
-                    : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'
+                    : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
             "
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         />
 
-        <p v-if="error" :id="errorId" class="text-sm font-medium text-red-600 dark:text-red-400">
+        <p v-if="error" :id="errorId" class="text-[13px] font-medium text-red-600 dark:text-red-400">
             {{ error }}
         </p>
     </div>

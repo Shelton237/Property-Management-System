@@ -65,7 +65,7 @@ const logout = () => logoutForm.post(route('logout'));
             :aria-label="t('navigation.header.open_user_menu')"
             :aria-expanded="open"
             aria-haspopup="menu"
-            class="flex items-center gap-2 rounded-lg px-1.5 py-1 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:hover:bg-slate-800"
+            class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-lg px-1.5 py-1 transition-colors duration-200 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:hover:bg-slate-800"
             @click="open = !open"
         >
             <span

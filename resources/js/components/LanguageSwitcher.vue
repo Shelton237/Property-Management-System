@@ -44,7 +44,7 @@ onBeforeUnmount(() => {
             :aria-label="t('common.language')"
             :aria-expanded="open"
             aria-haspopup="menu"
-            class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 transition hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:focus-visible:ring-offset-slate-950"
+            class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 transition-colors duration-200 hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:focus-visible:ring-offset-slate-950"
             @click="open = !open"
         >
             <LocaleFlag :code="locale" class="h-[22px] w-[22px]" />

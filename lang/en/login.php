@@ -28,6 +28,8 @@ return [
     'trial_question' => 'New to :brand?',
     'trial_cta' => 'Start your free 14 day trial',
 
+    // Not rendered by the current minimal layout. Kept so the
+    // presentation panel can be restored without rewriting the copy.
     'panel' => [
         'headline_before' => 'Run your front desk,',
         'headline_highlight' => 'restaurant and accounting',

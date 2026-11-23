@@ -36,7 +36,7 @@ function toggleTheme(): void {
             type="button"
             :aria-label="t('navigation.header.toggle_sidebar')"
             :aria-expanded="!collapsed"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+            class="grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-lg text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
             @click="emit('toggle')"
         >
             <PanelLeft class="h-4 w-4" aria-hidden="true" />
@@ -88,7 +88,7 @@ function toggleTheme(): void {
             <button
                 type="button"
                 :aria-label="isDark ? t('navigation.header.toggle_theme_light') : t('navigation.header.toggle_theme_dark')"
-                class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                class="grid h-11 w-11 cursor-pointer place-items-center rounded-lg text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
                 @click="toggleTheme"
             >
                 <Sun v-if="isDark" class="h-4 w-4" aria-hidden="true" />
@@ -101,7 +101,7 @@ function toggleTheme(): void {
                 disabled
                 :aria-label="t('navigation.header.notifications')"
                 :title="t('navigation.header.no_notifications')"
-                class="grid h-9 w-9 cursor-not-allowed place-items-center rounded-lg text-slate-300 dark:text-slate-600"
+                class="grid h-11 w-11 cursor-not-allowed place-items-center rounded-lg text-slate-300 dark:text-slate-600"
             >
                 <Bell class="h-4 w-4" aria-hidden="true" />
             </button>
