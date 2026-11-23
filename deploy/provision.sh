@@ -27,13 +27,16 @@ else
 fi
 
 echo "==> 2/5 Droits fichiers"
+# Groupe www-data pour que PHP (mod_php) lise le code ; ecriture limitee a ce
+# dont le serveur web a besoin. On ne touche pas aux bits d'execution existants,
+# sinon vendor/bin et node_modules/.bin deviennent inutilisables.
 chown -R "${APP_USER}:www-data" "$DEST"
-find "$DEST" -type d -exec chmod 2775 {} +
-find "$DEST" -type f -exec chmod 0664 {} +
-chmod 0775 "$DEST/artisan"
-chmod -R 2775 "$DEST/storage" "$DEST/bootstrap/cache"
-chmod 0600 "$DEST/.env"
-chown "${APP_USER}:${APP_USER}" "$DEST/.env"
+chmod 0750 "$DEST"
+find "$DEST/storage" "$DEST/bootstrap/cache" -type d -exec chmod 2775 {} +
+find "$DEST/storage" "$DEST/bootstrap/cache" -type f -exec chmod 0664 {} +
+# .env contient les identifiants de base : lisible par le groupe web, pas par les autres.
+chown "${APP_USER}:www-data" "$DEST/.env"
+chmod 0640 "$DEST/.env"
 
 echo "==> 3/5 Vhost Apache"
 cat > "$VHOST" <<VHOSTEOF
