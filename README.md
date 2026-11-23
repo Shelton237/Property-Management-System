@@ -43,11 +43,36 @@ d'environnement `BRAND_NAME`. Aucun composant ne contient le nom du produit.
 BRAND_NAME="Votre marque"
 ```
 
-## Couleur de marque
+## Identite visuelle
 
-La palette est definie une seule fois, dans l'objet `brand` en haut de
+La palette officielle est definie une seule fois, en haut de
 [`tailwind.config.js`](tailwind.config.js). Les composants n'utilisent que les
-classes `brand-*`, donc changer de couleur ne demande qu'une edition de cet objet.
+classes correspondantes, donc changer une couleur ne demande qu'une edition de
+ce fichier.
+
+| Role | Valeur | Classes |
+| --- | --- | --- |
+| Bleu marine | `#082b55` | `brand-800` |
+| Bleu profond | `#0d3768` | `brand-700` |
+| Or | `#f2ae18` | `gold-500` |
+| Gris clair | `#eef3fa` | `field` |
+| Fond de page | `#f6f9fd` | `page` |
+| Texte secondaire | `#526b8c` | `ink` |
+
+La palette or s'appelle `gold` et non `accent` : le preset shadcn possede deja
+une cle `accent`, et la lui reprendre casserait tous les composants qui en
+dependent.
+
+Police : Montserrat, chargee depuis fonts.bunny.net.
+
+### Fichiers de marque
+
+- `public/images/pms-logo.png` : logo, utilise par `BrandLogo.vue`.
+- `public/images/login-cover.jpg` : photographie du panneau de connexion.
+
+Les deux viennent du pack d'elements graphiques et sont des extractions de la
+maquette, pas des originaux haute resolution. Une version vectorielle du logo
+et la photographie source les remplaceraient avantageusement.
 
 ## Developpement
 

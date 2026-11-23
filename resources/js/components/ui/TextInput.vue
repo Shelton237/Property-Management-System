@@ -47,7 +47,7 @@ const errorId = computed(() => `${props.id}-error`);
             :autofocus="autofocus"
             :aria-invalid="error ? 'true' : undefined"
             :aria-describedby="error ? errorId : undefined"
-            class="w-full rounded-xl border bg-slate-100/80 px-4 py-3.5 text-[15px] text-brand-900 transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:bg-slate-800 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus-visible:ring-offset-slate-900"
+            class="w-full rounded-xl border bg-field px-4 py-3.5 text-[15px] text-brand-900 transition placeholder:text-slate-400 focus:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:bg-slate-800 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus-visible:ring-offset-slate-900"
             :class="
                 error
                     ? 'border-red-400 dark:border-red-500'

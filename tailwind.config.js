@@ -1,40 +1,48 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 /*
- * Brand palette: deep navy. This object is the single place to change the
+ * Brand palette, built around the two official navies: #082b55 (bleu marine)
+ * and #0d3768 (bleu profond). This object is the single place to change the
  * product colour, every component refers to it through the `brand-*` classes.
  */
 const brand = {
-    50: '#f2f5fb',
-    100: '#e3e9f5',
-    200: '#c2cee7',
-    300: '#93a6d1',
-    400: '#5e78b4',
-    500: '#3a5597',
-    600: '#2a4080',
-    700: '#203468',
-    800: '#16295b',
-    900: '#101e45',
-    950: '#0a142e',
-    DEFAULT: '#16295b',
+    50: '#f0f5fc',
+    100: '#dde8f6',
+    200: '#bcd1ec',
+    300: '#8fb2df',
+    400: '#5a8bcd',
+    500: '#2f66b4',
+    600: '#134a8a',
+    700: '#0d3768',
+    800: '#082b55',
+    900: '#061f3e',
+    950: '#04142a',
+    DEFAULT: '#082b55',
 };
 
 /*
- * Gold palette. Used for highlights, checks and decorative curves.
+ * Gold palette, built around the official #f2ae18. Named `gold` rather than
+ * `accent`: the shadcn preset already owns an `accent` key, and reusing it
+ * would silently break every component that depends on it.
  */
 const gold = {
-    50: '#fef6e7',
-    100: '#fdeac4',
-    200: '#fad68b',
-    300: '#f7c154',
-    400: '#f4af2e',
-    500: '#f0a11a',
-    600: '#d4870f',
-    700: '#b06c0e',
-    800: '#8c5612',
-    900: '#734711',
-    DEFAULT: '#f0a11a',
+    50: '#fef8e8',
+    100: '#fdedc3',
+    200: '#fbdd8b',
+    300: '#f8c94e',
+    400: '#f5ba2a',
+    500: '#f2ae18',
+    600: '#d2900c',
+    700: '#a9700d',
+    800: '#8a5a12',
+    900: '#724a12',
+    DEFAULT: '#f2ae18',
 };
+
+/* Neutral surfaces and secondary text, from the same official palette. */
+const page = '#f6f9fd';
+const field = '#eef3fa';
+const ink = '#526b8c';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -58,6 +66,9 @@ export default {
             colors: {
                 brand,
                 gold,
+                page,
+                field,
+                ink,
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {

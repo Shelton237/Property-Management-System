@@ -43,7 +43,7 @@ const submit = () => {
 <template>
     <Head :title="t('login.page_title')" />
 
-    <div class="relative min-h-screen overflow-hidden bg-[#f7f9fc] dark:bg-slate-950">
+    <div class="relative min-h-screen overflow-hidden bg-page dark:bg-slate-950">
         <!-- Decorative corner curves, desktop only. -->
         <div
             class="pointer-events-none absolute -left-[88px] -top-[88px] hidden h-[176px] w-[176px] rounded-full bg-brand-800 lg:block"
@@ -62,9 +62,9 @@ const submit = () => {
             <!-- Form column: the only one shown on small screens. -->
             <div class="flex min-h-screen flex-col px-4 py-5 sm:px-7 sm:py-7">
                 <div
-                    class="mx-auto flex w-full max-w-[740px] flex-1 flex-col justify-center rounded-[28px] bg-white px-6 py-9 shadow-[0_30px_80px_-45px_rgba(16,30,69,0.4)] dark:bg-slate-900 sm:px-14 sm:py-12"
+                    class="mx-auto flex w-full max-w-[740px] flex-1 flex-col justify-center rounded-[28px] bg-white px-6 py-9 shadow-[0_30px_80px_-45px_rgba(8,43,85,0.4)] dark:bg-slate-900 sm:px-14 sm:py-12"
                 >
-                    <header class="flex items-start justify-between gap-4">
+                    <header class="flex items-center justify-between gap-4">
                         <BrandLogo />
                         <LanguageSwitcher />
                     </header>
@@ -73,7 +73,7 @@ const submit = () => {
                         {{ t('login.title') }}
                     </h1>
                     <span class="mt-5 block h-1 w-[90px] rounded-full bg-gold-500" aria-hidden="true" />
-                    <p class="mt-4 text-base text-slate-500 dark:text-slate-400">
+                    <p class="mt-4 text-base text-ink dark:text-slate-400">
                         {{ t('login.subtitle') }}
                     </p>
 
@@ -115,7 +115,7 @@ const submit = () => {
                                 <Link
                                     v-if="canResetPassword"
                                     :href="route('password.request')"
-                                    class="rounded text-[15px] font-medium text-brand-600 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-900"
+                                    class="rounded text-[15px] font-medium text-brand-700 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 dark:text-brand-300 dark:focus-visible:ring-offset-slate-900"
                                 >
                                     {{ t('login.forgot') }}
                                 </Link>
@@ -132,7 +132,7 @@ const submit = () => {
                         </Button>
                     </form>
 
-                    <div class="mt-8 flex items-center gap-4 rounded-2xl bg-slate-100/70 px-5 py-4 dark:bg-slate-800">
+                    <div class="mt-8 flex items-center gap-4 rounded-2xl bg-field px-5 py-4 dark:bg-slate-800">
                         <span
                             class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-brand-800 dark:bg-slate-900 dark:text-slate-100"
                             aria-hidden="true"
@@ -155,24 +155,25 @@ const submit = () => {
                     </div>
                 </div>
 
-                <footer class="pt-5 text-center text-xs text-slate-400 dark:text-slate-500">
+                <footer class="pt-5 text-center text-xs text-ink/70 dark:text-slate-500">
                     {{ t('common.footer', { year: currentYear }) }}
                 </footer>
             </div>
 
             <!-- Presentation panel: desktop only, decorative. -->
             <aside class="relative hidden overflow-hidden lg:block" aria-hidden="true">
+                <div class="absolute inset-0 bg-brand-900" />
                 <!--
-                    The photograph is optional: drop a file at
-                    public/images/login-cover.jpg and it shows through the
-                    overlay. Without it, the panel stays a plain navy field.
+                    The photograph only covers the right hand side: the file in
+                    the asset pack is a narrow crop, so stretching it across the
+                    whole panel would show how soft it is.
                 -->
-                <div class="absolute inset-0 bg-brand-900 bg-[url('/images/login-cover.jpg')] bg-cover bg-center" />
-                <div class="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/95 to-brand-900/70" />
+                <div class="absolute inset-y-0 right-0 w-[46%] bg-[url('/images/login-cover.jpg')] bg-cover bg-center" />
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-950 via-brand-950/95 to-brand-900/55" />
 
                 <!-- Curved boundary with the form column. -->
                 <svg
-                    class="absolute inset-y-0 -left-px z-10 h-full w-[80px] text-[#f7f9fc] dark:text-slate-950"
+                    class="absolute inset-y-0 -left-px z-10 h-full w-[80px] text-page dark:text-slate-950"
                     viewBox="0 0 80 1000"
                     preserveAspectRatio="none"
                     fill="currentColor"
@@ -208,7 +209,7 @@ const submit = () => {
                             :key="stat.label"
                             class="rounded-2xl border border-white/15 bg-white/10 px-5 py-5 backdrop-blur-sm"
                         >
-                            <component :is="stat.icon" class="h-6 w-6 text-gold-400" />
+                            <component :is="stat.icon" class="h-6 w-6 text-gold-400" :stroke-width="1.8" />
                             <dd class="mt-5 text-[26px] font-extrabold leading-tight text-white 2xl:text-[30px]">
                                 {{ t(`login.panel.stats.${stat.value}`) }}
                             </dd>
