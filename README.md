@@ -27,11 +27,27 @@ pour disposer du meme PHP, de la meme base et du meme Apache que la production.
 ssh website-server
 cd /var/www/PROPERTY-MANAGEMENT-SYSTEM
 
-php artisan serve          # ou via le vhost pms.diginova.cm
 npm run dev                # HMR Vite
 npm run build              # build de production
-php artisan test           # tests
+composer test              # tests
+npm run lint               # lint du front
 ```
+
+Le site est servi par Apache sur <https://pms.diginova.cm> : pas besoin de
+`php artisan serve`. Apres modification d'un fichier de configuration ou de
+`.env`, rafraichir le cache : `php artisan config:cache`.
+
+### Tests : toujours `composer test`
+
+Le repertoire sert a la fois la production et le developpement. La configuration
+y est mise en cache, et dans cet etat Laravel ignore `phpunit.xml` : un
+`php artisan test` direct viserait la base applicative `pms`, que
+`RefreshDatabase` viderait.
+
+`tests/bootstrap.php` refuse donc de demarrer tant que le cache est present, et
+`composer test` enchaine proprement `config:clear`, les tests, puis
+`config:cache`. Seconde barriere : toute base dont le nom ne finit pas par
+`_test` est rejetee.
 
 ### Base de donnees
 
@@ -48,7 +64,10 @@ dans `~/.pms-db-root.txt` (hors depot, chmod 600).
 
 ## Mise en production
 
-Le vhost, les droits fichiers et le certificat TLS sont installes par
+L'application est en ligne sur <https://pms.diginova.cm> (HTTP redirige en 301,
+certificat Let's Encrypt renouvele automatiquement par `certbot.timer`).
+
+Le vhost, les droits fichiers et le certificat TLS ont ete installes par
 [`deploy/provision.sh`](deploy/provision.sh), a lancer **une seule fois** avec sudo :
 
 ```bash
@@ -57,7 +76,13 @@ sudo bash ~/PROPERTY-MANAGEMENT-SYSTEM/deploy/provision.sh
 
 Le script est idempotent : il deplace l'application vers `/var/www`, applique les
 droits, cree le vhost `pms.diginova.cm`, puis demande un certificat Let's Encrypt.
+Pour recevoir les alertes d'expiration ailleurs :
+`LE_EMAIL=vous@domaine.cm sudo -E bash deploy/provision.sh`.
 
 ## DNS
 
 `pms.diginova.cm` et `www.pms.diginova.cm` -> `155.117.46.218` (propagation faite).
+
+Sur ce serveur mutualise, un domaine sans vhost dedie est servi par le premier
+vhost `*:80` charge. Un sous-domaine peut donc sembler « deja en ligne » alors
+qu'il affiche une autre application.
