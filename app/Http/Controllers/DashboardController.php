@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): Response
+    /**
+     * The property and the business date reach the page through the shared
+     * Inertia props, since the whole backoffice shell needs them.
+     */
+    public function __invoke(): Response
     {
-        $user = $request->user();
-
-        return Inertia::render('Dashboard', [
-            'hotel' => $user->hotel === null ? null : [
-                'name' => $user->hotel->name,
-                'city' => $user->hotel->city,
-            ],
-        ]);
+        return Inertia::render('Dashboard');
     }
 }
