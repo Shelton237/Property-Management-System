@@ -58,7 +58,7 @@ export const navigation: NavigationSection[] = [
     {
         key: 'front_office',
         items: [
-            { key: 'front_desk', icon: ConciergeBell },
+            { key: 'front_desk', icon: ConciergeBell, route: 'front-desk.index' },
             { key: 'reservations', icon: CalendarCheck },
             { key: 'new_booking', icon: CalendarPlus },
             { key: 'group_booking', icon: Users },

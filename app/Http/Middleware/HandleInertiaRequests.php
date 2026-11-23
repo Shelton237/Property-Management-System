@@ -20,7 +20,9 @@ class HandleInertiaRequests extends Middleware
      *
      * @var list<string>
      */
-    private const TRANSLATION_GROUPS = ['common', 'login', 'dashboard', 'password_reset', 'navigation'];
+    private const TRANSLATION_GROUPS = [
+        'common', 'login', 'dashboard', 'password_reset', 'navigation', 'front_desk',
+    ];
 
     /**
      * Define the props that are shared by default.
@@ -42,6 +44,10 @@ class HandleInertiaRequests extends Middleware
             // every page, so both are shared rather than passed per controller.
             'hotel' => $this->hotel($request),
             'businessDate' => $this->businessDate($request),
+            // One-shot confirmation of an action, read once by the page.
+            'flash' => [
+                'status' => $request->session()->get('status'),
+            ],
             'locale' => app()->getLocale(),
             'locales' => config('branding.locales'),
             'translations' => $this->translations(),

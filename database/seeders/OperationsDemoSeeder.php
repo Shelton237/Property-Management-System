@@ -202,7 +202,12 @@ class OperationsDemoSeeder extends Seeder
                 $rate = $room->roomType->base_rate + (mt_rand(-3, 4) * 1000);
 
                 $status = match (true) {
-                    $checkOut->lessThanOrEqualTo($today) => mt_rand(1, 14) === 1 ? 'no_show' : 'departed',
+                    // Finished before today.
+                    $checkOut->lessThan($today) => mt_rand(1, 14) === 1 ? 'no_show' : 'departed',
+                    // Leaving today: mostly still in the room, waiting at the desk.
+                    $checkOut->equalTo($today) => mt_rand(1, 3) === 1 ? 'departed' : 'in_house',
+                    // Arriving today: most are still expected, some already in.
+                    $date->equalTo($today) => mt_rand(1, 10) <= 6 ? 'confirmed' : 'in_house',
                     $date->greaterThan($today) => mt_rand(1, 12) === 1 ? 'cancelled' : 'confirmed',
                     default => 'in_house',
                 };
@@ -238,7 +243,9 @@ class OperationsDemoSeeder extends Seeder
 
     private function createFolio(Hotel $hotel, Reservation $reservation, CarbonImmutable $today): void
     {
-        if ($reservation->status === 'cancelled') {
+        // Nothing is charged before the guest arrives: a confirmed booking has
+        // no folio yet, the front desk opens it at check-in.
+        if (in_array($reservation->status, ['cancelled', 'confirmed'], true)) {
             return;
         }
 
